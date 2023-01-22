@@ -1,11 +1,24 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Cull'
+description: 'Delete abandoned branches automatically. Stay clean.'
+author: 'game8inc'
 inputs:
-  milliseconds: # change this
+  repo-token:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'Set Personal Access Token'
+  dry-run:
+    required: false
+    # 削除する準備ができたら、'false' を設定します。
+    description: "Set 'false' when you are ready to delete."
+    default: 'true'
+  older-than:
+    required: false
+    description: 'Delete if the latest commit is more than X days old.'
+    default: '10'
+  max-deletion-per-day:
+    required: false
+    # すべてのブランチが 1 日で削除されるのを防ぎたい場合は、低く設定します。
+    description: 'Set low if you want to prevent ALL branches deleted by one day.'
+    default: '5'
 runs:
   using: 'node16'
   main: 'dist/index.js'
