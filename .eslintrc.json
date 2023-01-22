@@ -17,6 +17,11 @@
     "eslint-comments/no-use": "off",
     "import/no-namespace": "off",
     "no-unused-vars": "off",
+    "filenames/match-exported": [
+      2,
+      null,
+      "\\.ts$"
+    ],
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/explicit-member-accessibility": [
       "error",
@@ -30,12 +35,6 @@
     "@typescript-eslint/ban-ts-comment": "error",
     "camelcase": "off",
     "@typescript-eslint/consistent-type-assertions": "error",
-    "@typescript-eslint/explicit-function-return-type": [
-      "error",
-      {
-        "allowExpressions": true
-      }
-    ],
     "@typescript-eslint/func-call-spacing": [
       "error",
       "never"
