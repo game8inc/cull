@@ -1,4 +1,3 @@
-import * as core from '@actions/core'
 import {Octokit} from 'octokit'
 
 type Props = {
@@ -135,23 +134,41 @@ export async function run({
   }
 
   let deleteCount = 0
-  const deletedBranchNames: string[] = []
-  try {
-    const branches = await getBranches()
-    for (const branch of branches) {
-      if (deleteCount >= maxDeletionPerDay) continue
-      if (branch.protected) continue
-      if (await branch.isNewer) continue
-      if (await branch.hasOpenedPullRequest) continue
+  const rules = [
+    '=== Rules ===',
+    '1. Not too [MANY] deletion per day',
+    '2. No recent [COMMITS]',
+    '3. No related open [PR]',
+    '4. Non-[PROTECTED] branch'
+  ]
+  const skippedBranches: string[] = ['=== Skipped branches ===']
+  const deletingBranches: string[] = ['=== Deleting branches ===']
+  const branches = await getBranches()
+  let conditions: boolean[]
+  for (const branch of branches) {
+    conditions = [
+      deleteCount >= maxDeletionPerDay,
+      branch.protected,
+      await branch.isNewer,
+      await branch.hasOpenedPullRequest
+    ]
+    if (conditions.every(condition => !condition)) {
       deleteCount++
-      deletedBranchNames.push(branch.name)
       await branch.destroy()
+      deletingBranches.push(branch.name)
+    } else {
+      skippedBranches.push(
+        [
+          conditions[0] ? '[MANY]' : '',
+          conditions[1] ? '[PROTECTED]' : '',
+          conditions[2] ? '[COMMITS]' : '',
+          conditions[3] ? '[PR]' : '',
+          branch.name
+        ].join('')
+      )
     }
-  } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
-    throw error
   }
-  return deletedBranchNames
+  return [...rules, ...skippedBranches, ...deletingBranches]
 }
 
 if (require.main === module) {
