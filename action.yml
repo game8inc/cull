@@ -1,5 +1,5 @@
-name: 'Cull'
-description: 'Delete abandoned branches automatically. Stay clean.'
+name: 'Auto-delete abandoned branches'
+description: 'Delete abandoned(no recent commits, no related pull request, non-protected) branches everyday. Stay clean.'
 author: 'game8inc'
 inputs:
   repo-token:
