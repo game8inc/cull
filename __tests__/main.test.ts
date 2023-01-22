@@ -85,9 +85,19 @@ describe('', () => {
   test('delete some branches', async () => {
     const result = await main()
     expect(result).toStrictEqual([
+      '=== Rules ===',
+      '1. Not too [MANY] deletion per day',
+      '2. No recent [COMMITS]',
+      '3. No related open [PR]',
+      '4. Non-[PROTECTED] branch',
+      '=== Skipped branches ===',
+      '[PROTECTED]protected',
+      '[COMMITS]feat/newer',
+      '[PR]feat/old-with-opened-pull-request',
+      '[MANY]feat/old-target-y',
+      '=== Deleting branches ===',
       'feat/old-with-closed-pull-request-target',
       'feat/old-target-x'
-      // "feat/old-target-y" // because maxDeletionPerDay is 2
     ])
   })
 })
