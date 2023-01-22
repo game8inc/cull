@@ -1,19 +1,15 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as github from '@actions/github'
+import {run} from './run'
 
-async function run(): Promise<void> {
-  try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
-  } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
-  }
+export async function main(): Promise<string[]> {
+  const {owner, repo} = github.context.repo
+  const token = core.getInput('repo-token', {required: true})
+  const dryRun =
+    core.getInput('dry-run', {required: true}) !== 'false' ? true : false
+  const olderThan = parseInt(core.getInput('older-than', {required: true}))
+  const maxDeletionPerDay = parseInt(
+    core.getInput('max-deletion-per-day', {required: true})
+  )
+  return await run({maxDeletionPerDay, olderThan, dryRun, owner, repo, token})
 }
-
-run()
