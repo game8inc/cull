@@ -10,7 +10,7 @@ Everyday, let Github Actions delete your branches such as:
 - no related pull requests
 - non-protected branch
 
-Stay clean 👍
+Stay clean and Happy coding 👍
 
 ## Usage
 
